@@ -18,20 +18,16 @@ public class JogadorAutomatico implements Jogador
     };
 
     public JogadorAutomatico (Tabuleiro tab) throws Exception
-    {   tabDoJogo = tab;
-        // atribuir tab para tabDoJogo
-        // fazer o jogador escolher sua marca
-        // via sorteio de numeros aleatorio
-        if ((int)(Math.random()*2) == 0)
-            marca=new Marca('X');
-        else
-            marca=new Marca('O');
+    {
+        this (tab, new Marca (Math.random () < 0.5 ? 'X' : 'O'));
     }
 
     public JogadorAutomatico (Tabuleiro tab, Marca mrc) throws Exception
     {
-        tabDoJogo = tab;
-        marca = mrc;
+        if (tab == null || mrc == null)
+            throw new Exception ("Tabuleiro ou marca ausente");
+        this.tabDoJogo = tab;
+        this.marca     = mrc;
     }
 
     public Marca getMarca ()

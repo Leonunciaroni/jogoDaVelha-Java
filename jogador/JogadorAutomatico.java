@@ -5,120 +5,135 @@ public class JogadorAutomatico implements Jogador
     private Marca     marca     = null;
     private Tabuleiro tabDoJogo = null;
 
+    private static final int[][][] LINHAS =
+    {
+        {{0,0}, {0,1}, {0,2}},
+        {{1,0}, {1,1}, {1,2}},
+        {{2,0}, {2,1}, {2,2}},
+        {{0,0}, {1,0}, {2,0}},
+        {{0,1}, {1,1}, {2,1}},
+        {{0,2}, {1,2}, {2,2}},
+        {{0,0}, {1,1}, {2,2}},
+        {{0,2}, {1,1}, {2,0}}
+    };
+
     public JogadorAutomatico (Tabuleiro tab) throws Exception
     {   tabDoJogo = tab;
         // atribuir tab para tabDoJogo
         // fazer o jogador escolher sua marca
         // via sorteio de numeros aleatorio
         if ((int)(Math.random()*2) == 0)
-            marca=new marca('X');
+            marca=new Marca('X');
         else
-            marca=new marca('O');
+            marca=new Marca('O');
     }
 
     public JogadorAutomatico (Tabuleiro tab, Marca mrc) throws Exception
     {
-        // atribuir tab para tabDoJogo
-        // e mrc para marca
+        tabDoJogo = tab;
+        marca = mrc;
     }
 
     public Marca getMarca ()
     {
-        // retorna a marca do jogador
+        return marca;
     }
 
     public void facaSuaJogada ()
     {
         try
         {
-            // tentando ganhar na linha 0
-            if (this.tabDoJogo.matriz[0][0]==null &&
-                this.tabDoJogo.matriz[0][1]!=null && this.tabDoJogo.matriz[0][1].equals(this.marca) &&
-                this.tabDoJogo.matriz[0][2]!=null && this.tabDoJogo.matriz[0][2].equals(this.marca))
-                this.tabDoJogo.setMarcaNaPosicao(this.marca, 0,0);
-            else
-            if (this.tabDoJogo.matriz[0][0]!=null && this.tabDoJogo.matriz[0][0].equals(this.marca) &&
-                this.tabDoJogo.matriz[0][1]==null &&
-                this.tabDoJogo.matriz[0][2]!=null && this.tabDoJogo.matriz[0][2].equals(this.marca))
-                this.tabDoJogo.setMarcaNaPosicao(this.marca, 0,1);
-            else
-            if (this.tabDoJogo.matriz[0][0]!=null && this.tabDoJogo.matriz[0][0].equals(this.marca) &&
-                this.tabDoJogo.matriz[0][1]!=null && this.tabDoJogo.matriz[0][1].equals(this.marca) &&
-                this.tabDoJogo.matriz[0][2]==null)
-                this.tabDoJogo.setMarcaNaPosicao(this.marca, 0,2);
-            else
-            // tentando ganhar na linha 1
-            if ... else if ... else if ...
-            else
-            // tentando ganhar na linha 2
-            if ... else if ... else if ...
-            else
-            // tentando ganhar na coluna 0
-            if ... else if ... else if ...
-            else
-            // tentando ganhar na coluna 1
-            if ... else if ... else if ...
-            else
-            // tentando ganhar na coluna 2
-            if ... else if ... else if ...
-            else
-            // tentando ganhar na diagonal principal
-            if ... else if ... else if ...
-            else
-            // tentando ganhar na diagonal secundaria
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na linha 0
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na linha 1
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na linha 2
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na coluna 0
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na coluna 1
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na coluna 2
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na diagonal principal
-            if ... else if ... else if ...
-            else
-            // tentando atrapalhar vitoria na diagonal secundaria
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na linha 0
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na linha 1
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na linha 2
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na coluna 0
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na coluna 1
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na coluna 2
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na diagonal principal
-            if ... else if ... else if ...
-            else
-            // tentando jogada de futuro (há 1 marca do jogador e mais nada; vamos lá e plantamos outra marca) na diagonal secundaria
-            if ... else if ... else if ...
-            else
-            // termine jogando num lugar qualquer que esteja livre
+            if (jogarNaLinhaComDuasMarcas(marca))
+                return;
+
+            Marca adversaria = new Marca
+                (marca.getSimbolo() == 'X' ? 'O' : 'X');
+            if (jogarNaLinhaComDuasMarcas(adversaria))
+                return;
+
+            if (jogarNaLinhaComUmaMarca())
+                return;
+
+            jogarEmQualquerCasaLivre();
         }
         catch (Exception erro)
-        {} // ignorando pois sei que n o estou usando posicao invalida nem comparando com equals um null
+        {}
+    }
+
+    private boolean jogarNaLinhaComDuasMarcas (Marca alvo) throws Exception
+    {
+        for (int[][] linha : LINHAS)
+        {
+            int vazias = 0;
+            int linhaVazia = -1;
+            int colunaVazia = -1;
+            int encontradas = 0;
+
+            for (int[] posicao : linha)
+            {
+                Marca atual = tabDoJogo.getMarcaNaPosicao
+                    (posicao[0], posicao[1]);
+                if (atual == null)
+                {
+                    vazias++;
+                    linhaVazia = posicao[0];
+                    colunaVazia = posicao[1];
+                }
+                else if (atual.equals(alvo))
+                    encontradas++;
+            }
+
+            if (vazias == 1 && encontradas == 2)
+            {
+                tabDoJogo.setMarcaNaPosicao
+                    (marca, linhaVazia, colunaVazia);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean jogarNaLinhaComUmaMarca () throws Exception
+    {
+        for (int[][] linha : LINHAS)
+        {
+            int vazias = 0;
+            int minhasMarcas = 0;
+            int linhaVazia = -1;
+            int colunaVazia = -1;
+
+            for (int[] posicao : linha)
+            {
+                Marca atual = tabDoJogo.getMarcaNaPosicao
+                    (posicao[0], posicao[1]);
+                if (atual == null)
+                {
+                    vazias++;
+                    linhaVazia = posicao[0];
+                    colunaVazia = posicao[1];
+                }
+                else if (atual.equals(marca))
+                    minhasMarcas++;
+            }
+
+            if (vazias == 2 && minhasMarcas == 1)
+            {
+                tabDoJogo.setMarcaNaPosicao
+                    (marca, linhaVazia, colunaVazia);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void jogarEmQualquerCasaLivre () throws Exception
+    {
+        for (int linha = 0; linha < 3; linha++)
+            for (int coluna = 0; coluna < 3; coluna++)
+                if (tabDoJogo.getMarcaNaPosicao(linha, coluna) == null)
+                {
+                    tabDoJogo.setMarcaNaPosicao(marca, linha, coluna);
+                    return;
+                }
     }
 }

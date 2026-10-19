@@ -15,7 +15,7 @@ public class Marca
 
     public char getSimbolo ()
     {
-        // retornar simbolo
+        return this.simbolo;
     }
 
     @Override

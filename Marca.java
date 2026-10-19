@@ -8,6 +8,9 @@ public class Marca
         // seja 'X' ou 'O' e coloca-lo em
         // simbolo
         // dar excecao em caso de valor invalido
+        if (smb != 'X' && smb != 'O') throw new Exception ("Código inválido!");
+
+        this.simbolo = smb;
     }
 
     public char getSimbolo ()

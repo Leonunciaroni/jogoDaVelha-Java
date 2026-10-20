@@ -25,6 +25,7 @@ public class JogadorAutomatico implements Jogador
     public Marca getMarca ()
     {
         // retorna a marca do jogador
+        return this.marca;
     }
 
     public void facaSuaJogada ()

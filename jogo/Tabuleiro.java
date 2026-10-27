@@ -63,7 +63,13 @@ public class Tabuleiro implements Cloneable
     @Override
     public int hashCode ()
     {
-        return Arrays.deepHashCode (this.matriz);
+        int ret = 7;
+
+        for (int l = 0; l < 3; l++)
+            for (int c = 0; c < 3; c++)
+                ret = ret * 11 + (this.matriz[l][c] == null ? 0 : this.matriz[l][c].hashCode());
+
+        return ret;
     }
 
     public Tabuleiro (Tabuleiro modelo) throws Exception

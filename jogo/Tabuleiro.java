@@ -1,5 +1,4 @@
 package jogo;
-import java.util.Arrays;
 
 public class Tabuleiro implements Cloneable
 {
@@ -56,8 +55,24 @@ public class Tabuleiro implements Cloneable
     public boolean equals (Object obj)
     {
         if (this == obj) return true;
-        if (obj == null || obj.getClass () != this.getClass ()) return false;
-        return Arrays.deepEquals (this.matriz, ((Tabuleiro) obj).matriz);
+
+        if (obj == null) return false;
+
+        if (this.getClass() != obj.getClass()) return false;
+
+        Tabuleiro tab = (Tabuleiro) obj;
+
+        for (int l = 0; l < 3; l++)
+            for (int c = 0; c < 3; c++)
+            {
+                if (this.matriz[l][c] == null)
+                {
+                    if (tab.matriz[l][c] != null) return false;
+                }
+                else if (!this.matriz[l][c].equals(tab.matriz[l][c])) return false;
+            }
+
+        return true;
     }
 
     @Override
@@ -78,7 +93,8 @@ public class Tabuleiro implements Cloneable
         if (modelo == null)
             throw new Exception ("Modelo ausente");
         for (int l = 0; l < 3; l++)
-            this.matriz[l] = modelo.matriz[l].clone (); // shortcut: copia as referencias das Marcas, ok se Marca for imutavel
+            for (int c = 0; c < 3; c++)
+                this.matriz[l][c] = modelo.matriz[l][c]; // copia as referencias das Marcas, ok pois Marca e imutavel
     }
 
     @Override

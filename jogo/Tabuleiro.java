@@ -1,9 +1,14 @@
+package jogo;
 import java.util.Arrays;
 
 public class Tabuleiro implements Cloneable
 {
-    private Marca matriz [][] = new Marca [3][3];
+    private Marca matriz [][];
 
+    public Tabuleiro ()
+    {
+        this.matriz = new Marca [3][3];
+    }
     private void valida (int lin, int col) throws Exception
     {
         if (lin < 0 || lin > 2 || col < 0 || col > 2)
@@ -63,6 +68,7 @@ public class Tabuleiro implements Cloneable
 
     public Tabuleiro (Tabuleiro modelo) throws Exception
     {
+        this ();
         if (modelo == null)
             throw new Exception ("Modelo ausente");
         for (int l = 0; l < 3; l++)

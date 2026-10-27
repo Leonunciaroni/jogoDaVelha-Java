@@ -1,3 +1,4 @@
+import jogo.*;
 import jogador.*;
 import java.io.*;
 

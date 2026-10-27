@@ -1,4 +1,5 @@
 package jogador;
+import jogo.*;
 
 public interface Jogador
 {

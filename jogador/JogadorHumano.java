@@ -1,4 +1,5 @@
-﻿package jogador;
+package jogador;
+import jogo.*;
 
 import java.io.*;
 
